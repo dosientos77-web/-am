@@ -9,7 +9,7 @@ module.exports = {
     publicPath: '/',
   },
   resolve: {
-    extensions: ['.web.tsx', '.web.ts', '.tsx', '.ts', '.js', '.jsx'],
+    extensions: ['.web.tsx', '.web.ts', '.web.jsx', '.web.js', '.tsx', '.ts', '.jsx', '.js'],
     alias: {
       'react-native$': 'react-native-web',
       '@': path.resolve(__dirname, 'src'),
