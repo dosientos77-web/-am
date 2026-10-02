@@ -29,25 +29,15 @@ class ApiService {
       ...(options.headers as Record<string, string>),
     };
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers,
-    });
-
+    const response = await fetch(`${this.baseUrl}${endpoint}`, { ...options, headers });
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Request failed');
-    }
-
+    if (!response.ok) throw new Error(data.message || 'Request failed');
     return data;
   }
 
-  // Auth
   async register(name: string, email: string, password: string) {
     return this.request(API_ENDPOINTS.REGISTER, {
       method: 'POST',
@@ -60,9 +50,7 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    if (response.token) {
-      await this.setToken(response.token);
-    }
+    if (response.token) await this.setToken(response.token);
     return response;
   }
 
@@ -78,7 +66,6 @@ class ApiService {
     return this.request(API_ENDPOINTS.ME);
   }
 
-  // Restaurants
   async getRestaurants(filters?: { status?: string }) {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
@@ -86,16 +73,12 @@ class ApiService {
     return this.request(`${API_ENDPOINTS.RESTAURANTS}${query ? `?${query}` : ''}`);
   }
 
-  async getRestaurant(id: string) {
-    return this.request(API_ENDPOINTS.RESTAURANT_BY_ID(id));
-  }
+  async getRestaurant(id: string) { return this.request(API_ENDPOINTS.RESTAURANT_BY_ID(id)); }
 
-  // Categories
   async getCategories(restaurantId: string) {
     return this.request(`${API_ENDPOINTS.CATEGORIES}?restaurant=${restaurantId}`);
   }
 
-  // Products
   async getProducts(filters?: { restaurant?: string; category?: string; available?: boolean }) {
     const params = new URLSearchParams();
     if (filters?.restaurant) params.append('restaurant', filters.restaurant);
@@ -105,20 +88,25 @@ class ApiService {
     return this.request(`${API_ENDPOINTS.PRODUCTS}${query ? `?${query}` : ''}`);
   }
 
-  async getProduct(id: string) {
-    return this.request(API_ENDPOINTS.PRODUCT_BY_ID(id));
+  async getProduct(id: string) { return this.request(API_ENDPOINTS.PRODUCT_BY_ID(id)); }
+
+  async getOrders(filters?: { status?: string }) {
+    const params = new URLSearchParams();
+    if (filters?.status) params.append('status', filters.status);
+    const query = params.toString();
+    return this.request(`${API_ENDPOINTS.ORDERS}${query ? `?${query}` : ''}`);
   }
 
-  // Orders
-  async getOrders() {
-    return this.request(API_ENDPOINTS.ORDERS);
-  }
+  async getOrder(id: string) { return this.request(API_ENDPOINTS.ORDER_BY_ID(id)); }
 
-  async getOrder(id: string) {
-    return this.request(API_ENDPOINTS.ORDER_BY_ID(id));
-  }
-
-  async createOrder(orderData: unknown) {
+  async createOrder(orderData: {
+    restaurant: string;
+    items: { product: string; quantity: number }[];
+    deliveryType: 'PICKUP' | 'DELIVERY';
+    deliveryAddress?: string;
+    pickupTime?: string;
+    paymentMethod?: 'CASH' | 'CARD' | 'TRANSFER';
+  }) {
     return this.request(API_ENDPOINTS.ORDERS, {
       method: 'POST',
       body: JSON.stringify(orderData),
@@ -132,6 +120,10 @@ class ApiService {
     });
   }
 
+  async cancelOrder(orderId: string) {
+    return this.request(API_ENDPOINTS.CANCEL_ORDER(orderId), { method: 'POST' });
+  }
+
   async confirmDelivery(orderId: string, code: string) {
     return this.request(API_ENDPOINTS.CONFIRM_DELIVERY(orderId), {
       method: 'POST',
@@ -139,7 +131,6 @@ class ApiService {
     });
   }
 
-  // Inventory
   async getInventory(filters?: { restaurant?: string; status?: string }) {
     const params = new URLSearchParams();
     if (filters?.restaurant) params.append('restaurant', filters.restaurant);
@@ -148,30 +139,11 @@ class ApiService {
     return this.request(`${API_ENDPOINTS.INVENTORY}${query ? `?${query}` : ''}`);
   }
 
-  // Users
-  async getUsers() {
-    return this.request(API_ENDPOINTS.USERS);
-  }
-
-  // Restaurant management
-  async approveRestaurant(id: string) {
-    return this.request(API_ENDPOINTS.APPROVE_RESTAURANT(id), { method: 'PATCH' });
-  }
-
-  // Promotions
-  async getPromotions() {
-    return this.request(API_ENDPOINTS.PROMOTIONS);
-  }
-
-  // Support
-  async getSupportTickets() {
-    return this.request(API_ENDPOINTS.SUPPORT);
-  }
-
-  // Audit
-  async getAuditLogs() {
-    return this.request(API_ENDPOINTS.AUDIT_LOGS);
-  }
+  async getUsers() { return this.request(API_ENDPOINTS.USERS); }
+  async approveRestaurant(id: string) { return this.request(API_ENDPOINTS.APPROVE_RESTAURANT(id), { method: 'PATCH' }); }
+  async getPromotions() { return this.request(API_ENDPOINTS.PROMOTIONS); }
+  async getSupportTickets() { return this.request(API_ENDPOINTS.SUPPORT); }
+  async getAuditLogs() { return this.request(API_ENDPOINTS.AUDIT_LOGS); }
 }
 
 export const api = new ApiService();
