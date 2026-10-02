@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { api } from '../../services/api';
 import { Loading } from '../../components/Loading';
 import { ErrorState } from '../../components/ErrorState';
@@ -12,6 +12,7 @@ import { Order } from '../../types';
 
 export function DeliveryDetailScreen(): React.JSX.Element {
   const route = useRoute<any>();
+  const navigation = useNavigation<any>();
   const { orderId } = route.params;
 
   const [order, setOrder] = useState<Order | null>(null);
@@ -82,8 +83,8 @@ export function DeliveryDetailScreen(): React.JSX.Element {
       )}
       {order.status === 'OUT_FOR_DELIVERY' && (
         <Button
-          title="Entregar pedido"
-          onPress={() => updateStatus('DELIVERED')}
+          title="Confirmar entrega"
+          onPress={() => navigation.navigate('ConfirmDelivery', { orderId })}
           style={styles.actionButton}
         />
       )}
@@ -92,55 +93,15 @@ export function DeliveryDetailScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.md,
-  },
-  card: {
-    marginBottom: spacing.md,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  orderId: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.bold,
-    color: colors.gray900,
-  },
-  date: {
-    fontSize: fontSize.sm,
-    color: colors.gray600,
-  },
-  sectionTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.semibold,
-    color: colors.gray900,
-    marginBottom: spacing.sm,
-  },
-  address: {
-    fontSize: fontSize.md,
-    color: colors.gray700,
-  },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray200,
-  },
-  itemName: {
-    fontSize: fontSize.md,
-    color: colors.gray900,
-  },
-  itemDetails: {
-    fontSize: fontSize.sm,
-    color: colors.gray600,
-  },
-  actionButton: {
-    marginTop: spacing.md,
-  },
+  container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
+  card: { marginBottom: spacing.md },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
+  orderId: { fontSize: fontSize.lg, fontWeight: fontWeight.bold, color: colors.gray900 },
+  date: { fontSize: fontSize.sm, color: colors.gray600 },
+  sectionTitle: { fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.gray900, marginBottom: spacing.sm },
+  address: { fontSize: fontSize.md, color: colors.gray700 },
+  item: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.gray200 },
+  itemName: { fontSize: fontSize.md, color: colors.gray900 },
+  itemDetails: { fontSize: fontSize.sm, color: colors.gray600 },
+  actionButton: { marginTop: spacing.md },
 });
