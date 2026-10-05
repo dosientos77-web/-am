@@ -1,7 +1,10 @@
 /**
  * ÑamFod - Configuración de API
  */
-export const API_BASE_URL = process.env.API_URL || 'http://localhost:5000/api';
+export const API_BASE_URL =
+  typeof process !== 'undefined' && process.env?.API_URL
+    ? process.env.API_URL
+    : 'http://localhost:5001/api';
 
 export const API_ENDPOINTS = {
   // Auth
