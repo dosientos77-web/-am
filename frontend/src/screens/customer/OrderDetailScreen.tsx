@@ -50,6 +50,16 @@ export function OrderDetailScreen(): React.JSX.Element {
         </Text>
       </Card>
 
+      {order.deliveryType === 'DELIVERY' && order.deliveryCode && order.status !== 'DELIVERED' && order.status !== 'CANCELLED' && (
+        <Card style={styles.card}>
+          <Text style={styles.sectionTitle}>Código de entrega</Text>
+          <Text style={styles.deliveryCode}>{order.deliveryCode}</Text>
+          <Text style={styles.deliveryCodeHelp}>
+            Proporciona este código al repartidor cuando recibas tu pedido.
+          </Text>
+        </Card>
+      )}
+
       <Card style={styles.card}>
         <Text style={styles.sectionTitle}>Artículos</Text>
         {order.items.map((item, index) => (
@@ -110,6 +120,19 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
     color: colors.gray900,
     marginBottom: spacing.sm,
+  },
+  deliveryCode: {
+    fontSize: 32,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    letterSpacing: 6,
+    textAlign: 'center',
+    marginVertical: spacing.sm,
+  },
+  deliveryCodeHelp: {
+    fontSize: fontSize.sm,
+    color: colors.gray600,
+    textAlign: 'center',
   },
   item: {
     flexDirection: 'row',
