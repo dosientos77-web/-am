@@ -43,17 +43,25 @@ export function HomeScreen(): React.JSX.Element {
           <Text style={styles.greeting}>¡Hola, {user?.name || 'Usuario'}!</Text>
           <Text style={styles.subtitle}>¿Qué quieres comer hoy?</Text>
         </View>
-        <TouchableOpacity
-          style={styles.cartButton}
-          onPress={() => navigation.navigate('Cart')}
-        >
-          <Text style={styles.cartIcon}>🛒</Text>
-          {totalItems > 0 && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{totalItems}</Text>
-            </View>
-          )}
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={styles.profileButton}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <Text style={styles.profileIcon}>👤</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.cartButton}
+            onPress={() => navigation.navigate('Cart')}
+          >
+            <Text style={styles.cartIcon}>🛒</Text>
+            {totalItems > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{totalItems}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       {loading ? (
@@ -104,6 +112,17 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     color: colors.gray600,
     marginTop: spacing.xs,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileButton: {
+    padding: spacing.sm,
+    marginRight: spacing.xs,
+  },
+  profileIcon: {
+    fontSize: 24,
   },
   cartButton: {
     position: 'relative',
