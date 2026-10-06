@@ -61,13 +61,13 @@ export function AppNavigator(): React.JSX.Element {
         ) : isRestaurant ? (
           <>
             <Stack.Screen name="Home" component={RestaurantDashboardScreen} />
-            <Stack.Screen name="RestaurantOrders" component={RestaurantOrdersScreen} />
-            <Stack.Screen name="RestaurantOrderDetail" component={RestaurantOrderDetailScreen} />
-            <Stack.Screen name="RestaurantProducts" component={ProductsScreen} />
-            <Stack.Screen name="RestaurantCategories" component={CategoriesScreen} />
-            <Stack.Screen name="RestaurantInventory" component={InventoryScreen} />
-            <Stack.Screen name="RestaurantSales" component={SalesScreen} />
-            <Stack.Screen name="RestaurantSettings" component={SettingsScreen} />
+            <Stack.Screen name="RestaurantOrders" component={RestaurantOrdersScreen} options={{ headerShown: true, title: "Pedidos" }} />
+            <Stack.Screen name="RestaurantOrderDetail" component={RestaurantOrderDetailScreen} options={{ headerShown: true, title: "Detalle del pedido" }} />
+            <Stack.Screen name="RestaurantProducts" component={ProductsScreen} options={{ headerShown: true, title: "Productos" }} />
+            <Stack.Screen name="RestaurantCategories" component={CategoriesScreen} options={{ headerShown: true, title: "Categorías" }} />
+            <Stack.Screen name="RestaurantInventory" component={InventoryScreen} options={{ headerShown: true, title: "Inventario" }} />
+            <Stack.Screen name="RestaurantSales" component={SalesScreen} options={{ headerShown: true, title: "Ventas" }} />
+            <Stack.Screen name="RestaurantSettings" component={SettingsScreen} options={{ headerShown: true, title: "Configuración" }} />
           </>
         ) : isDelivery ? (
           <>
