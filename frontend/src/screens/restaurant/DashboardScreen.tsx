@@ -78,6 +78,9 @@ export function DashboardScreen(): React.JSX.Element {
       <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('RestaurantSales')}>
         <Text style={styles.menuText}>📊 Ver ventas</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('RestaurantSettings')}>
+        <Text style={styles.menuText}>⚙️ Configuración</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
