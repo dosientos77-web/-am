@@ -20,12 +20,16 @@ export function DashboardScreen(): React.JSX.Element {
     setLoading(true);
     setError('');
     try {
-      const response: any = await api.getOrders();
-      const orders = response.data;
+      const [activeResponse, completedResponse]: any[] = await Promise.all([
+        api.getOrders(),
+        api.getOrders({ status: 'DELIVERED' }),
+      ]);
+      const activeOrders = activeResponse.data;
+      const completedOrders = completedResponse.data;
       setStats({
-        available: orders.filter((o: any) => o.status === 'READY' && o.deliveryType === 'DELIVERY').length,
-        active: orders.filter((o: any) => o.status === 'OUT_FOR_DELIVERY').length,
-        completed: orders.filter((o: any) => o.status === 'DELIVERED').length,
+        available: activeOrders.filter((o: any) => o.status === 'READY' && o.deliveryType === 'DELIVERY').length,
+        active: activeOrders.filter((o: any) => o.status === 'OUT_FOR_DELIVERY').length,
+        completed: completedOrders.length,
       });
     } catch (err: any) {
       setError(err.message || 'No pudimos cargar el dashboard');
