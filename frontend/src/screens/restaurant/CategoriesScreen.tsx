@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import { Loading } from '../../components/Loading';
 import { EmptyState } from '../../components/EmptyState';
 import { ErrorState } from '../../components/ErrorState';
@@ -10,6 +11,7 @@ import { colors, spacing, fontSize, fontWeight } from '../../theme';
 import { Category } from '../../types';
 
 export function CategoriesScreen(): React.JSX.Element {
+  const { user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,7 +20,11 @@ export function CategoriesScreen(): React.JSX.Element {
     setLoading(true);
     setError('');
     try {
-      const response: any = await api.getCategories('');
+      if (!user?._id) throw new Error('No se pudo identificar al usuario');
+      const restaurantsResponse: any = await api.getRestaurants({ owner: user._id });
+      const restaurant = restaurantsResponse.data?.[0];
+      if (!restaurant?._id) throw new Error('No se encontró el restaurante asociado');
+      const response: any = await api.getCategories(restaurant._id);
       setCategories(response.data);
     } catch (err: any) {
       setError(err.message || 'No pudimos cargar las categorías');
