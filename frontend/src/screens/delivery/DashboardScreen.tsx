@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Loading } from '../../components/Loading';
 import { ErrorState } from '../../components/ErrorState';
@@ -9,6 +11,7 @@ import { colors, spacing, fontSize, fontWeight } from '../../theme';
 
 export function DashboardScreen(): React.JSX.Element {
   const navigation = useNavigation<any>();
+  const { logout } = useAuth();
   const [stats, setStats] = useState({ available: 0, active: 0, completed: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -64,6 +67,12 @@ export function DashboardScreen(): React.JSX.Element {
       <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('History')}>
         <Text style={styles.menuText}>📋 Historial de entregas</Text>
       </TouchableOpacity>
+      <Button
+        title="Cerrar Sesión"
+        onPress={logout}
+        variant="danger"
+        style={styles.logoutButton}
+      />
     </ScrollView>
   );
 }
@@ -122,5 +131,8 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: fontSize.md,
     color: colors.gray700,
+  },
+  logoutButton: {
+    marginTop: spacing.lg,
   },
 });
