@@ -93,12 +93,12 @@ export function AppNavigator(): React.JSX.Element {
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Restaurants" component={RestaurantsScreen} />
-            <Stack.Screen name="RestaurantMenu" component={RestaurantMenuScreen} />
-            <Stack.Screen name="Cart" component={CartScreen} />
-            <Stack.Screen name="Checkout" component={CheckoutScreen} />
-            <Stack.Screen name="Orders" component={OrdersScreen} />
-            <Stack.Screen name="OrderDetail" component={OrderDetailScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="RestaurantMenu" component={RestaurantMenuScreen} options={{ headerShown: true, title: "Menú" }} />
+            <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: true, title: "Carrito" }} />
+            <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ headerShown: true, title: "Finalizar pedido" }} />
+            <Stack.Screen name="Orders" component={OrdersScreen} options={{ headerShown: true, title: "Mis pedidos" }} />
+            <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ headerShown: true, title: "Detalle del pedido" }} />
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true, title: "Mi perfil" }} />
           </>
         )}
       </Stack.Navigator>
