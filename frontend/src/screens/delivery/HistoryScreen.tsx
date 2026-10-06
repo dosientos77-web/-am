@@ -19,11 +19,8 @@ export function HistoryScreen(): React.JSX.Element {
     setLoading(true);
     setError('');
     try {
-      const response: any = await api.getOrders();
-      const allOrders = response.data;
-      // Filter for delivered orders
-      const delivered = allOrders.filter((o: any) => o.status === 'DELIVERED');
-      setOrders(delivered);
+      const response: any = await api.getOrders({ status: 'DELIVERED' });
+      setOrders(response.data);
     } catch (err: any) {
       setError(err.message || 'No pudimos cargar el historial');
     } finally {
