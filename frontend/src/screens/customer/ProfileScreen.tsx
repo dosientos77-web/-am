@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../../theme';
 
 export function ProfileScreen(): React.JSX.Element {
+  const navigation = useNavigation<any>();
   const { user, logout } = useAuth();
 
   return (
@@ -26,7 +28,7 @@ export function ProfileScreen(): React.JSX.Element {
         <TouchableOpacity style={styles.menuItem}>
           <Text style={styles.menuText}>Editar perfil</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Orders')}>
           <Text style={styles.menuText}>Historial de pedidos</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
