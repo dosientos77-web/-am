@@ -66,9 +66,10 @@ class ApiService {
     return this.request(API_ENDPOINTS.ME);
   }
 
-  async getRestaurants(filters?: { status?: string }) {
+  async getRestaurants(filters?: { status?: string; owner?: string }) {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
+    if (filters?.owner) params.append('owner', filters.owner);
     const query = params.toString();
     return this.request(`${API_ENDPOINTS.RESTAURANTS}${query ? `?${query}` : ''}`);
   }
