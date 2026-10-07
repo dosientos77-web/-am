@@ -21,8 +21,9 @@ export function SalesScreen(): React.JSX.Element {
       const totalSales = deliveredOrders.reduce((sum: number, o: any) => sum + o.total, 0);
       const totalOrders = deliveredOrders.length;
       const averageOrder = totalOrders > 0 ? totalSales / totalOrders : 0;
+      const roundedAverageOrder = Math.round((averageOrder + Number.EPSILON) * 100) / 100;
 
-      setSales({ totalSales, totalOrders, averageOrder });
+      setSales({ totalSales, totalOrders, averageOrder: roundedAverageOrder });
     } catch (err: any) {
       setError(err.message || 'No pudimos cargar las ventas');
     } finally {
