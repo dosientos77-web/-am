@@ -44,7 +44,11 @@ export function RestaurantMenuScreen(): React.JSX.Element {
   }, [restaurantId]);
 
   const filteredProducts = selectedCategory
-    ? products.filter((p) => p.category === selectedCategory)
+    ? products.filter((p) => {
+        const productCategoryId =
+          typeof p.category === 'string' ? p.category : p.category?._id;
+        return productCategoryId === selectedCategory;
+      })
     : products;
 
   if (loading) return <Loading fullScreen message="Cargando menú..." />;
