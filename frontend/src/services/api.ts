@@ -80,6 +80,13 @@ class ApiService {
     return this.request(`${API_ENDPOINTS.CATEGORIES}?restaurant=${restaurantId}`);
   }
 
+  async createCategory(categoryData: { name: string; description?: string; restaurant: string }) {
+    return this.request(API_ENDPOINTS.CATEGORIES, {
+      method: 'POST',
+      body: JSON.stringify(categoryData),
+    });
+  }
+
   async getProducts(filters?: { restaurant?: string; category?: string; available?: boolean }) {
     const params = new URLSearchParams();
     if (filters?.restaurant) params.append('restaurant', filters.restaurant);
