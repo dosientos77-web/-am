@@ -25,6 +25,10 @@ export function InventoryScreen(): React.JSX.Element {
   const [minimumStock, setMinimumStock] = useState('5');
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
+  const [editingId, setEditingId] = useState('');
+  const [editStock, setEditStock] = useState('');
+  const [editMinimumStock, setEditMinimumStock] = useState('');
+  const [editError, setEditError] = useState('');
 
   const loadInventory = async () => {
     setLoading(true);
@@ -98,6 +102,42 @@ export function InventoryScreen(): React.JSX.Element {
     }
   };
 
+  const startEditing = (item: Inventory) => {
+    setEditingId(item._id);
+    setEditStock(String(item.stock));
+    setEditMinimumStock(String(item.minimumStock));
+    setEditError('');
+  };
+
+  const handleUpdateInventory = async () => {
+    const numericStock = Number(editStock);
+    const numericMinimum = Number(editMinimumStock);
+    setEditError('');
+
+    if (editStock.trim() === '' || !Number.isInteger(numericStock) || numericStock < 0) {
+      setEditError('Ingresa un stock válido');
+      return;
+    }
+    if (editMinimumStock.trim() === '' || !Number.isInteger(numericMinimum) || numericMinimum < 0) {
+      setEditError('Ingresa un stock mínimo válido');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await api.updateInventory(editingId, {
+        stock: numericStock,
+        minimumStock: numericMinimum,
+      });
+      setEditingId('');
+      await loadInventory();
+    } catch (err: any) {
+      setEditError(err.message || 'No pudimos actualizar el inventario');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) return <Loading fullScreen message="Cargando inventario..." />;
   if (error) return <ErrorState message={error} onRetry={loadInventory} />;
   return (
@@ -119,6 +159,17 @@ export function InventoryScreen(): React.JSX.Element {
               <Text style={styles.detail}>Stock: {item.stock}</Text>
               <Text style={styles.detail}>Mínimo: {item.minimumStock}</Text>
             </View>
+            {editingId === item._id ? (
+              <View style={styles.editForm}>
+                <Input label="Stock" value={editStock} onChangeText={setEditStock} keyboardType="number-pad" />
+                <Input label="Stock mínimo" value={editMinimumStock} onChangeText={setEditMinimumStock} keyboardType="number-pad" />
+                {editError ? <Text style={styles.formError}>{editError}</Text> : null}
+                <Button title="Guardar cambios" onPress={handleUpdateInventory} loading={saving} />
+                <Button title="Cancelar" onPress={() => { setEditingId(''); setEditError(''); }} variant="outline" style={styles.cancelButton} />
+              </View>
+            ) : (
+              <Button title="Editar" onPress={() => startEditing(item)} variant="outline" style={styles.editButton} />
+            )}
           </Card>
         )}
       />
@@ -219,6 +270,12 @@ const styles = StyleSheet.create({
   formError: {
     color: colors.error,
     marginBottom: spacing.md,
+  },
+  editForm: {
+    marginTop: spacing.md,
+  },
+  editButton: {
+    marginTop: spacing.md,
   },
   cancelButton: {
     marginTop: spacing.sm,
