@@ -76,6 +76,21 @@ class ApiService {
 
   async getRestaurant(id: string) { return this.request(API_ENDPOINTS.RESTAURANT_BY_ID(id)); }
 
+  async updateRestaurant(id: string, restaurantData: {
+    name?: string;
+    description?: string;
+    category?: string;
+    phone?: string;
+    openingHours?: string;
+    location?: string;
+    logo?: string;
+  }) {
+    return this.request(API_ENDPOINTS.RESTAURANT_BY_ID(id), {
+      method: 'PATCH',
+      body: JSON.stringify(restaurantData),
+    });
+  }
+
   async getCategories(restaurantId: string) {
     return this.request(`${API_ENDPOINTS.CATEGORIES}?restaurant=${restaurantId}`);
   }
