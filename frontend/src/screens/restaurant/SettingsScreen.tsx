@@ -12,6 +12,8 @@ export function SettingsScreen(): React.JSX.Element {
   const { user, logout } = useAuth();
   const [restaurant, setRestaurant] = useState<any>(null);
   const [editing, setEditing] = useState(false);
+  const [editingHours, setEditingHours] = useState(false);
+  const [openingHours, setOpeningHours] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -50,6 +52,31 @@ export function SettingsScreen(): React.JSX.Element {
     });
     setEditing(true);
     setError('');
+  };
+
+  const startEditingHours = () => {
+    if (!restaurant) return;
+    setOpeningHours(restaurant.openingHours || '');
+    setEditingHours(true);
+    setError('');
+  };
+
+  const saveOpeningHours = async () => {
+    if (!restaurant?._id) return;
+
+    setSaving(true);
+    setError('');
+    try {
+      const response: any = await api.updateRestaurant(restaurant._id, {
+        openingHours: openingHours.trim(),
+      });
+      setRestaurant(response.data);
+      setEditingHours(false);
+    } catch (err: any) {
+      setError(err.message || 'No pudimos guardar el horario');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const saveInformation = async () => {
@@ -146,9 +173,38 @@ export function SettingsScreen(): React.JSX.Element {
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Horarios de atención</Text>
-        </TouchableOpacity>
+        {editingHours ? (
+          <View style={styles.inlineForm}>
+            <Text style={styles.label}>Horario de atención</Text>
+            <TextInput
+              style={styles.input}
+              value={openingHours}
+              onChangeText={setOpeningHours}
+              placeholder="Ej. Lunes a viernes, 8:00 - 17:00"
+            />
+
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+
+            <Button
+              title={saving ? 'Guardando...' : 'Guardar horario'}
+              onPress={saveOpeningHours}
+              disabled={saving}
+            />
+            <Button
+              title="Cancelar"
+              onPress={() => {
+                setEditingHours(false);
+                setError('');
+              }}
+              variant="secondary"
+              style={styles.cancelButton}
+            />
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.menuItem} onPress={startEditingHours}>
+            <Text style={styles.menuText}>Horarios de atención</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.menuItem}>
           <Text style={styles.menuText}>Ubicación</Text>
         </TouchableOpacity>
@@ -201,6 +257,11 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: fontSize.md,
     color: colors.gray700,
+  },
+  inlineForm: {
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray200,
   },
   email: {
     fontSize: fontSize.sm,
