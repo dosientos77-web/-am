@@ -161,6 +161,13 @@ class ApiService {
     return this.request(`${API_ENDPOINTS.INVENTORY}${query ? `?${query}` : ''}`);
   }
 
+  async createInventory(inventoryData: { product: string; restaurant: string; stock: number; minimumStock: number }) {
+    return this.request(API_ENDPOINTS.INVENTORY, {
+      method: 'POST',
+      body: JSON.stringify(inventoryData),
+    });
+  }
+
   async getUsers() { return this.request(API_ENDPOINTS.USERS); }
   async approveRestaurant(id: string) { return this.request(API_ENDPOINTS.APPROVE_RESTAURANT(id), { method: 'PATCH' }); }
   async getPromotions() { return this.request(API_ENDPOINTS.PROMOTIONS); }
