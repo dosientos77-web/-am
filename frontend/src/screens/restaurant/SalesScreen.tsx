@@ -17,8 +17,9 @@ export function SalesScreen(): React.JSX.Element {
     try {
       const response: any = await api.getOrders();
       const orders = response.data;
-      const totalSales = orders.reduce((sum: number, o: any) => sum + o.total, 0);
-      const totalOrders = orders.length;
+      const deliveredOrders = orders.filter((o: any) => o.status === 'DELIVERED');
+      const totalSales = deliveredOrders.reduce((sum: number, o: any) => sum + o.total, 0);
+      const totalOrders = deliveredOrders.length;
       const averageOrder = totalOrders > 0 ? totalSales / totalOrders : 0;
 
       setSales({ totalSales, totalOrders, averageOrder });
