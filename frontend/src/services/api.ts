@@ -168,6 +168,13 @@ class ApiService {
     });
   }
 
+  async updateInventory(id: string, inventoryData: { stock?: number; minimumStock?: number }) {
+    return this.request(`${API_ENDPOINTS.INVENTORY}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(inventoryData),
+    });
+  }
+
   async getUsers() { return this.request(API_ENDPOINTS.USERS); }
   async approveRestaurant(id: string) { return this.request(API_ENDPOINTS.APPROVE_RESTAURANT(id), { method: 'PATCH' }); }
   async getPromotions() { return this.request(API_ENDPOINTS.PROMOTIONS); }
