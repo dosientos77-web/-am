@@ -98,6 +98,20 @@ class ApiService {
 
   async getProduct(id: string) { return this.request(API_ENDPOINTS.PRODUCT_BY_ID(id)); }
 
+  async createProduct(productData: {
+    restaurant: string;
+    category: string;
+    name: string;
+    description?: string;
+    image?: string;
+    price: number;
+  }) {
+    return this.request(API_ENDPOINTS.PRODUCTS, {
+      method: 'POST',
+      body: JSON.stringify(productData),
+    });
+  }
+
   async getOrders(filters?: { status?: string }) {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
